@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Waypoint · 途径 — 移民路径地图册</title>
+<meta name="description" content="A bilingual reference atlas of immigration pathways · 中英双语移民路径参考手册">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Inter:wght@400;500;600&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet">
+<style>
+/* ===== Design tokens (Atlas palette) ===== */
+:root{
+  --paper:#f4efe4; --paper-2:#ebe4d4; --card:#fbf8f1; --ink:#1f2622; --ink-2:#4a524c; --ink-3:#7a7f76;
+  --rule:#d6ccb7; --green:#2f5a46; --green-2:#e1e9df; --navy:#1f3a5a; --navy-2:#dfe5ec; --warn:#8a4b22; --warn-2:#f2e3d3;
+  --serif:"Fraunces","Noto Serif SC",Georgia,serif; --sans:"Inter","Noto Sans SC",system-ui,sans-serif;
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px; --s6:32px; --s7:48px; --s8:72px;
+  --r:6px; --shadow:0 1px 0 var(--rule),0 8px 24px -16px rgba(40,35,20,.35); --ease:cubic-bezier(.2,.7,.2,1);
+}
+[data-theme="dark"]{
+  --paper:#1b1a17; --paper-2:#24221e; --card:#22201c; --ink:#ece5d6; --ink-2:#c3bba9; --ink-3:#8f8877;
+  --rule:#3a362e; --green:#8fbfa3; --green-2:#26332c; --navy:#9db7d6; --navy-2:#232c37; --warn:#e0a77c; --warn-2:#3a2b20;
+  --shadow:0 1px 0 var(--rule),0 8px 24px -16px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box} html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.65 var(--sans);-webkit-font-smoothing:antialiased;transition:background .3s,color .3s}
+/* subtle contour-line texture, like an atlas endpaper */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.35;z-index:-1;
+  background:repeating-radial-gradient(circle at 85% -10%,transparent 0 38px,var(--rule) 39px,transparent 40px)}
+a{color:var(--navy)} button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--navy);outline-offset:2px;border-radius:3px}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--s5)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+/* ===== Header ===== */
+header.top{border-bottom:1px solid var(--rule);position:sticky;top:0;background:color-mix(in srgb,var(--paper) 92%,transparent);backdrop-filter:blur(6px);z-index:20}
+.top .wrap{display:flex;align-items:center;gap:var(--s4);height:60px}
+.brand{font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:-.01em;text-decoration:none;color:var(--ink);display:flex;align-items:center;gap:10px}
+.brand small{font:500 11px/1 var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);border-left:1px solid var(--rule);padding-left:10px}
+.spacer{flex:1}
+.seg{display:inline-flex;border:1px solid var(--rule);border-radius:999px;padding:2px;background:var(--card)}
+.seg button{border:0;background:none;padding:4px 10px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.06em;cursor:pointer;color:var(--ink-3)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.iconbtn{border:1px solid var(--rule);background:var(--card);width:32px;height:32px;border-radius:999px;display:grid;place-items:center;cursor:pointer}
+.iconbtn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.5}
+/* ===== Hero ===== */
+.hero{padding:var(--s7) 0 var(--s5);display:grid;grid-template-columns:1.4fr 1fr;gap:var(--s6);align-items:end}
+.eyebrow{font:600 11px/1 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:var(--green)}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(34px,5vw,56px);line-height:1.08;letter-spacing:-.02em;margin:var(--s3) 0 var(--s4);text-wrap:balance}
+html[lang="zh-CN"] h1, html[lang="zh-CN"] h2, html[lang="zh-CN"] .cname{letter-spacing:.01em}
+.lede{color:var(--ink-2);max-width:56ch;margin:0}
+.legend{border-top:2px solid var(--ink);padding-top:var(--s3);font-size:13px;color:var(--ink-2)}
+.legend dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0}
+.legend dt{font-weight:600;color:var(--ink)}
+/* ===== Controls ===== */
+.controls{display:grid;gap:var(--s3);padding:var(--s4) 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin-bottom:var(--s5)}
+.search{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--ink);padding:6px 2px}
+.search svg{width:18px;height:18px;stroke:var(--ink-3);fill:none;stroke-width:1.5}
+.search input{flex:1;border:0;background:none;font:inherit;font-size:17px;color:var(--ink);outline:none}
+.search input::placeholder{color:var(--ink-3)}
+.frow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 6px}
+.flabel{font:600 11px/1 var(--sans);letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);min-width:92px}
+.chip{border:1px solid var(--rule);background:transparent;border-radius:999px;padding:3px 11px;font-size:13px;cursor:pointer;transition:all .18s var(--ease)}
+.chip:hover{border-color:var(--ink-2)}
+.chip[aria-pressed="true"]{background:var(--green);border-color:var(--green);color:var(--paper)}
+.count{font-size:13px;color:var(--ink-3);margin-left:auto}
+/* ===== Grid & cards ===== */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--s4);padding-bottom:var(--s8)}
+.card{background:var(--card);border:1px solid var(--rule);border-radius:var(--r);padding:var(--s4) var(--s4) var(--s3);display:flex;flex-direction:column;gap:var(--s3);
+  transition:transform .25s var(--ease),box-shadow .25s var(--ease),border-color .25s;animation:fade .4s var(--ease) both;position:relative}
+.card:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--ink-3)}
+.card.stub{background:transparent;border-style:dashed}
+.card.stub:hover{transform:none;box-shadow:none}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+.chead{display:flex;align-items:baseline;gap:10px}
+.flag{font-size:20px;line-height:1;filter:saturate(.8)}
+.cname{font-family:var(--serif);font-size:21px;font-weight:600;margin:0;line-height:1.2}
+.calt{font-size:12px;color:var(--ink-3)}
+.region{margin-left:auto;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.orient{font-size:13px;color:var(--ink-2);margin:0;min-height:3.2em}
+.metrics{display:grid;gap:6px;font-size:12px}
+.metric{display:grid;grid-template-columns:72px 1fr auto;align-items:center;gap:8px;color:var(--ink-2)}
+.ticks{display:flex;gap:3px}
+.ticks i{width:14px;height:6px;border:1px solid var(--navy);border-radius:1px}
+.ticks i.on{background:var(--navy)}
+.ticks.g i{border-color:var(--green)} .ticks.g i.on{background:var(--green)}
+.badge{font-size:11px;border:1px solid var(--rule);border-radius:3px;padding:1px 6px;color:var(--ink-2);white-space:nowrap}
+.tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{font-size:11px;background:var(--green-2);color:var(--green);padding:2px 7px;border-radius:3px}
+.cfoot{display:flex;gap:8px;border-top:1px solid var(--rule);padding-top:var(--s3);margin-top:auto}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--paper);border-radius:4px;padding:5px 12px;font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn.ghost[aria-pressed="true"]{border-color:var(--navy);color:var(--navy);background:var(--navy-2)}
+.soon{font-size:12px;color:var(--ink-3);font-style:italic}
+.empty{grid-column:1/-1;text-align:center;color:var(--ink-3);padding:var(--s7)}
+/* ===== Drawer (country detail) ===== */
+.scrim{position:fixed;inset:0;background:rgba(20,18,12,.35);opacity:0;pointer-events:none;transition:opacity .3s;z-index:40}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(760px,100%);background:var(--paper);border-left:1px solid var(--rule);z-index:50;overflow-y:auto;
+  transform:translateX(100%);transition:transform .38s var(--ease);box-shadow:-20px 0 40px -30px rgba(0,0,0,.5)}
+.drawer.open{transform:none}
+.dhead{padding:var(--s6) var(--s6) var(--s4);border-bottom:2px solid var(--ink);position:relative}
+.dhead h2{font-family:var(--serif);font-size:clamp(30px,4vw,42px);margin:6px 0 4px;line-height:1.1}
+.close{position:absolute;top:var(--s4);right:var(--s4)}
+.dbody{padding:var(--s4) var(--s6) var(--s8)}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--rule);border-radius:var(--r);margin:var(--s4) 0;background:var(--card)}
+.facts div{padding:var(--s3) var(--s4);border-right:1px solid var(--rule)} .facts div:last-child{border:0}
+.facts .fl{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
+details.sec{border-top:1px solid var(--rule)}
+details.sec summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:var(--s3);padding:var(--s4) 0;font-family:var(--serif);font-size:20px;font-weight:600}
+details.sec summary::-webkit-details-marker{display:none}
+summary .num{font:600 11px var(--sans);color:var(--green);letter-spacing:.1em;width:24px}
+summary .chev{margin-left:auto;width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.5;transition:transform .25s var(--ease)}
+details[open] summary .chev{transform:rotate(180deg)}
+.secbody{padding:0 0 var(--s5) 36px;animation:fade .35s var(--ease)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:var(--s2) var(--s4);margin:0}
+.kv dt{font-weight:600;font-size:13px;color:var(--ink)} .kv dd{margin:0;color:var(--ink-2)}
+.kv dt small{display:block;font-weight:400;color:var(--ink-3);font-size:11px}
+.pw{display:grid;gap:var(--s3)}
+.pw article{border-left:2px solid var(--green);padding:2px 0 2px var(--s4)}
+.pw h4{margin:0 0 2px;font-size:15px} .pw p{margin:0;color:var(--ink-2);font-size:14px}
+.pw .ptype{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--green)}
+.risk{list-style:none;padding:0;margin:0;display:grid;gap:var(--s2)}
+.risk li{background:var(--warn-2);border-left:2px solid var(--warn);padding:var(--s2) var(--s3);font-size:14px;border-radius:0 4px 4px 0}
+.risk b{color:var(--warn);font-size:12px;letter-spacing:.06em;margin-right:6px}
+.links a{display:inline-flex;gap:6px;margin-right:var(--s4)}
+.note{font-size:12px;color:var(--ink-3);border:1px solid var(--rule);border-radius:4px;padding:var(--s3);margin-top:var(--s5)}
+/* ===== Compare tray & view ===== */
+.tray{position:fixed;left:50%;bottom:var(--s4);transform:translate(-50%,140%);transition:transform .35s var(--ease);z-index:30;
+  background:var(--ink);color:var(--paper);border-radius:999px;padding:6px 6px 6px var(--s4);display:flex;gap:var(--s3);align-items:center;box-shadow:0 12px 30px -12px rgba(0,0,0,.5);max-width:calc(100% - 24px)}
+.tray.show{transform:translate(-50%,0)}
+.tray.hide{display:none}
+.tray .pill{display:inline-flex;align-items:center;gap:4px;font-size:13px;white-space:nowrap}
+.tray .pill button{border:0;background:none;color:var(--paper);opacity:.6;cursor:pointer;padding:0 2px}
+.tray .go{background:var(--paper);color:var(--ink);border:0;border-radius:999px;padding:6px 14px;font-weight:600;font-size:13px;cursor:pointer}
+.tray .go:disabled{opacity:.5;cursor:not-allowed}
+.tray .lbl{font-size:11px;opacity:.7;letter-spacing:.1em;text-transform:uppercase}
+#compare{display:none;padding:var(--s6) 0 var(--s8)} #compare.show{display:block;animation:fade .35s var(--ease)}
+.ctab-wrap{overflow-x:auto;border:1px solid var(--rule);border-radius:var(--r);background:var(--card)}
+table.ctab{border-collapse:collapse;width:100%;min-width:640px;font-size:14px}
+.ctab th,.ctab td{text-align:left;vertical-align:top;padding:var(--s3) var(--s4);border-bottom:1px solid var(--rule)}
+.ctab thead th{font-family:var(--serif);font-size:20px;border-bottom:2px solid var(--ink);position:sticky;top:0;background:var(--card)}
+.ctab tbody th{width:170px;font-size:13px;color:var(--ink)}
+.ctab tbody th small{display:block;color:var(--ink-3);font-weight:400}
+.ctab tr.grp th{background:var(--paper-2);font:600 11px var(--sans);letter-spacing:.14em;text-transform:uppercase;color:var(--green)}
+.ctab td{color:var(--ink-2)}
+.back{margin-bottom:var(--s4)}
+footer{border-top:1px solid var(--rule);padding:var(--s5) 0 var(--s7);font-size:13px;color:var(--ink-3)}
+/* ===== Responsive ===== */
+@media (max-width:820px){ .hero{grid-template-columns:1fr} }
+@media (max-width:560px){
+  .wrap{padding:0 var(--s4)} .brand small{display:none} .flabel{min-width:100%}
+  .dhead,.dbody{padding-left:var(--s4);padding-right:var(--s4)} .secbody{padding-left:0}
+  .kv{grid-template-columns:1fr} .kv dd{margin-bottom:var(--s2)} .facts{grid-template-columns:1fr} .facts div{border-right:0;border-bottom:1px solid var(--rule)}
+  .tray .lbl{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<a class="sr" href="#main">Skip to content</a>
+<header class="top"><div class="wrap">
+  <a class="brand" href="#/" aria-label="Waypoint home">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><path d="M15 9l-2 4-4 2 2-4z" fill="currentColor"/></svg>
+    Waypoint · 途径 <small data-i18n="tagline"></small></a>
+  <span class="spacer"></span>
+  <div class="seg" role="group" aria-label="Language">
+    <button data-lang="zh" aria-pressed="true">CN</button><button data-lang="en" aria-pressed="false">EN</button>
+  </div>
+  <button class="iconbtn" id="themeBtn" aria-label="Toggle dark mode"><svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 019.5 4 8 8 0 1020 14.5z"/></svg></button>
+</div></header>
+
+<main id="main" class="wrap">
+  <section id="home">
+    <div class="hero">
+      <div>
+        <div class="eyebrow" data-i18n="eyebrow"></div>
+        <h1 data-i18n="title"></h1>
+        <p class="lede" data-i18n="lede"></p>
+      </div>
+      <div class="legend" aria-label="legend">
+        <dl>
+          <dt data-i18n="difficulty"></dt><dd data-i18n="legendDiff"></dd>
+          <dt data-i18n="costShort"></dt><dd data-i18n="legendCost"></dd>
+          <dt data-i18n="langReq"></dt><dd data-i18n="legendLang"></dd>
+        </dl>
+      </div>
+    </div>
+    <div class="controls" role="search">
+      <label class="search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+        <span class="sr" data-i18n="search"></span><input id="q" type="search" autocomplete="off"></label>
+      <div class="frow" id="fDiff"></div>
+      <div class="frow" id="fLang"></div>
+      <div class="frow" id="fPath"></div>
+    </div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+  </section>
+  <section id="compare" aria-labelledby="cmpTitle"></section>
+</main>
+
+<footer><div class="wrap"><p data-i18n="disclaimer"></p><p>Waypoint · 途径 — <span data-i18n="updated"></span> <span id="upd"></span></p></div></footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dTitle" tabindex="-1"></aside>
+<div class="tray" id="tray" role="region" aria-label="Compare"></div>
+
+<script src="data.js"></script>
+<script>
+/* ============ Waypoint app (vanilla JS) ============ */
+const D = window.WAYPOINT_DATA;
+const $ = (s, el = document) => el.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ---- UI strings ---- */
+const UI = {
+  zh: { tagline: "移民路径地图册", eyebrow: "参考手册 · 第一版", title: "在地图上，找到你的下一站。",
+    lede: "一本克制、诚实的移民参考手册：比较各国的主要路径、硬性要求、生活成本与真实风险。先看清楚，再做决定。",
+    difficulty: "难度", costShort: "生活成本", langReq: "语言要求",
+    legendDiff: "1–5 格，格数越多越难获得长期居留", legendCost: "1–5 格，相对生活成本", legendLang: "英语可行 / 需当地语言 / 两者皆可",
+    search: "搜索", searchPh: "搜索国家、路径或标签……", fDiff: "难度", fLang: "语言", fPath: "路径",
+    all: "全部", easy: "较易 1–2", mid: "中等 3", hard: "较难 4–5",
+    en: "英语可行", local: "需当地语言", either: "英/法均可",
+    skilled: "技术移民", employer: "雇主担保", study: "留学转移民", investment: "投资/创业", family: "家庭团聚", jobseeker: "求职签证",
+    details: "查看详情", compare: "加入比较", inCompare: "已加入", soon: "即将更新", shown: n => `显示 ${n} 个国家`,
+    none: "没有符合条件的国家，试试放宽筛选。",
+    secOverview: "概览", secPath: "主要路径", secReq: "关键要求", secLive: "生活与工作", secRisk: "风险与注意", secSuit: "适合人群", secLinks: "官方来源",
+    orientation: "政策走向", age: "年龄", language: "语言", education: "学历", experience: "工作经验", funds: "资金",
+    cost: "生活成本", jobs: "就业市场", salary: "薪资水平", housing: "住房", healthcare: "医疗", educationL: "子女教育",
+    rpolicy: "政策", rlanguage: "语言", rskill: "技能错配", rcost: "成本", rculture: "文化适应", rstability: "长期稳定",
+    close: "关闭", compareN: "比较", compareGo: "开始比较", clear: "清空", back: "← 返回目录", cmpTitle: "国家对比",
+    maxCompare: "最多比较 3 个国家", pickMore: "至少选择 2 个国家",
+    disclaimer: "免责声明：本站内容仅供一般参考，不构成法律或移民建议。各国政策变化频繁，数字多为近似值，请以官方网站和持牌顾问意见为准。",
+    updated: "内容更新至", region: "地区", diffN: n => `${n} / 5`, langLabel: "语言",
+    dNote: "所有数字为大致范围，可能随时调整，请在官方网站核实最新要求。" },
+  en: { tagline: "An atlas of immigration pathways", eyebrow: "Reference edition · Vol. 1", title: "Find your next waypoint on the map.",
+    lede: "A restrained, honest reference to immigration: compare main pathways, hard requirements, living costs and real risks across countries. See clearly, then decide.",
+    difficulty: "Difficulty", costShort: "Cost of living", langReq: "Language",
+    legendDiff: "1–5 ticks; more ticks = harder to secure long-term residence", legendCost: "1–5 ticks, relative cost of living", legendLang: "English works / local language / either",
+    search: "Search", searchPh: "Search countries, pathways or tags…", fDiff: "Difficulty", fLang: "Language", fPath: "Pathway",
+    all: "All", easy: "Easier 1–2", mid: "Moderate 3", hard: "Harder 4–5",
+    en: "English works", local: "Local language", either: "English or French",
+    skilled: "Skilled", employer: "Employer-sponsored", study: "Study-to-residency", investment: "Investment / business", family: "Family", jobseeker: "Job-seeker",
+    details: "View details", compare: "Compare", inCompare: "Added", soon: "Coming soon", shown: n => `${n} countries shown`,
+    none: "No countries match. Try loosening the filters.",
+    secOverview: "Overview", secPath: "Main pathways", secReq: "Key requirements", secLive: "Living & working", secRisk: "Risks & caveats", secSuit: "Who it suits", secLinks: "Official sources",
+    orientation: "Policy orientation", age: "Age", language: "Language", education: "Education", experience: "Work experience", funds: "Funds",
+    cost: "Cost of living", jobs: "Job market", salary: "Salary levels", housing: "Housing", healthcare: "Healthcare", educationL: "Schooling",
+    rpolicy: "Policy", rlanguage: "Language", rskill: "Skill mismatch", rcost: "Cost", rculture: "Culture", rstability: "Stability",
+    close: "Close", compareN: "Compare", compareGo: "Compare now", clear: "Clear", back: "← Back to index", cmpTitle: "Side-by-side comparison",
+    maxCompare: "Compare up to 3 countries", pickMore: "Pick at least 2 countries",
+    disclaimer: "Disclaimer: for general reference only, not legal or immigration advice. Policies change often and figures are approximate. Always check official sources and licensed advisers.",
+    updated: "Content as of", region: "Region", diffN: n => `${n} / 5`, langLabel: "Language",
+    dNote: "All figures are approximate ranges and may change at any time. Verify current requirements on official sites." }
+};
+/* bilingual pair helper for compare row headers */
+const PAIR = k => `${UI.zh[k]}<small>${UI.en[k]}</small>`;
+
+/* ---- state (persisted) ---- */
+const S = {
+  lang: localStorage.getItem("wp.lang") || "zh",
+  theme: localStorage.getItem("wp.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"),
+  q: "", diff: "all", langF: "all", path: "all",
+  cmp: JSON.parse(localStorage.getItem("wp.cmp") || "[]")
+};
+const t = (k, ...a) => { const v = UI[S.lang][k]; return typeof v === "function" ? v(...a) : v; };
+const L = o => (o ? o[S.lang] : "");
+const byId = id => D.countries.find(c => c.id === id);
+
+/* ---- small render helpers ---- */
+const ticks = (n, cls = "") => `<span class="ticks ${cls}" aria-hidden="true">${[1,2,3,4,5].map(i => `<i class="${i <= n ? "on" : ""}"></i>`).join("")}</span>`;
+const chev = `<svg class="chev" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+
+/* ---- filters ---- */
+function renderFilters() {
+  const mk = (id, label, key, opts) => {
+    $(id).innerHTML = `<span class="flabel">${t(label)}</span>` + opts.map(o =>
+      `<button class="chip" data-k="${key}" data-v="${o}" aria-pressed="${S[key] === o}">${t(o)}</button>`).join("");
+  };
+  mk("#fDiff", "fDiff", "diff", ["all", "easy", "mid", "hard"]);
+  mk("#fLang", "fLang", "langF", ["all", "en", "local", "either"]);
+  mk("#fPath", "fPath", "path", ["all", "skilled", "employer", "study", "jobseeker", "investment", "family"]);
+}
+function matches(c) {
+  const q = S.q.trim().toLowerCase();
+  if (q) {
+    const hay = [c.name.zh, c.name.en, c.region.zh, c.region.en, c.id,
+      ...(c.suits || []).flatMap(s => [s.zh, s.en]),
+      ...(c.pathways || []).flatMap(p => [p.name.zh, p.name.en])].join(" ").toLowerCase();
+    if (!hay.includes(q)) return false;
+  }
+  const filtering = S.diff !== "all" || S.langF !== "all" || S.path !== "all";
+  if (c.status !== "full") return !filtering; // stubs hide when filters active
+  if (S.diff === "easy" && c.difficulty > 2) return false;
+  if (S.diff === "mid" && c.difficulty !== 3) return false;
+  if (S.diff === "hard" && c.difficulty < 4) return false;
+  if (S.langF !== "all" && c.lang !== S.langF) return false;
+  if (S.path !== "all" && !c.pathwayTypes.includes(S.path)) return false;
+  return true;
+}
+
+/* ---- country grid ---- */
+function renderGrid() {
+  const list = D.countries.filter(matches);
+  const full = list.filter(c => c.status === "full").length;
+  $("#grid").innerHTML = (list.length ? "" : `<p class="empty">${t("none")}</p>`) + list.map((c, i) => {
+    const other = S.lang === "zh" ? c.name.en : c.name.zh;
+    if (c.status !== "full") return `<article class="card stub" style="animation-delay:${i * 15}ms">
+      <div class="chead"><span class="flag" aria-hidden="true">${c.flag}</span><div><h3 class="cname">${esc(L(c.name))}</h3><div class="calt">${esc(other)}</div></div><span class="region">${esc(L(c.region))}</span></div>
+      <span class="soon">${UI.zh.soon} / ${UI.en.soon}</span></article>`;
+    const on = S.cmp.includes(c.id);
+    return `<article class="card" style="animation-delay:${i * 25}ms">
+      <div class="chead"><span class="flag" aria-hidden="true">${c.flag}</span><div><h3 class="cname">${esc(L(c.name))}</h3><div class="calt">${esc(other)}</div></div><span class="region">${esc(L(c.region))}</span></div>
+      <p class="orient">${esc(L(c.orientation))}</p>
+      <div class="metrics">
+        <div class="metric"><span>${t("difficulty")}</span>${ticks(c.difficulty)}<span class="sr">${c.difficulty}/5</span><span>${c.difficulty}/5</span></div>
+        <div class="metric"><span>${t("costShort")}</span>${ticks(c.cost, "g")}<span>${c.cost}/5</span></div>
+        <div class="metric"><span>${t("langLabel")}</span><span class="badge">${t(c.lang)}</span><span></span></div>
+      </div>
+      <div class="tags">${c.suits.map(s => `<span class="tag">${esc(L(s))}</span>`).join("")}</div>
+      <div class="cfoot">
+        <button class="btn" data-open="${c.id}">${t("details")}</button>
+        <button class="btn ghost" data-cmp="${c.id}" aria-pressed="${on}">${on ? "✓ " + t("inCompare") : "+ " + t("compare")}</button>
+      </div></article>`;
+  }).join("");
+  document.title = `Waypoint · 途径 — ${t("tagline")}`;
+}
+
+/* ---- detail drawer ---- */
+let lastFocus = null;
+function openDetail(id) {
+  const c = byId(id); if (!c || c.status !== "full") return;
+  lastFocus = document.activeElement;
+  const sec = (n, key, body, open = true) => `<details class="sec" ${open ? "open" : ""}><summary><span class="num">0${n}</span>${t(key)}${chev}</summary><div class="secbody">${body}</div></details>`;
+  const kv = (obj, keys) => `<dl class="kv">${keys.map(([k, lab]) => `<dt>${t(lab)}<small>${S.lang === "zh" ? UI.en[lab] : UI.zh[lab]}</small></dt><dd>${esc(L(obj[k]))}</dd>`).join("")}</dl>`;
+  $("#drawer").innerHTML = `
+    <div class="dhead">
+      <button class="iconbtn close" data-close aria-label="${t("close")}"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      <div class="eyebrow">${c.flag} ${esc(L(c.region))}</div>
+      <h2 id="dTitle">${esc(L(c.name))}</h2><div class="calt">${esc(S.lang === "zh" ? c.name.en : c.name.zh)}</div>
+      <div class="facts">
+        <div><span class="fl">${t("difficulty")}</span>${ticks(c.difficulty)} ${c.difficulty}/5</div>
+        <div><span class="fl">${t("costShort")}</span>${ticks(c.cost, "g")} ${c.cost}/5</div>
+        <div><span class="fl">${t("langLabel")}</span>${t(c.lang)}</div>
+      </div>
+      <button class="btn ghost" data-cmp="${c.id}" aria-pressed="${S.cmp.includes(c.id)}">${S.cmp.includes(c.id) ? "✓ " + t("inCompare") : "+ " + t("compare")}</button>
+    </div>
+    <div class="dbody">
+      ${sec(1, "secOverview", `<p><b>${t("orientation")}：</b>${esc(L(c.orientation))}</p><p>${esc(L(c.overview))}</p>`)}
+      ${sec(2, "secPath", `<div class="pw">${c.pathways.map(p => `<article><div class="ptype">${t(p.type)}</div><h4>${esc(L(p.name))}</h4><p>${esc(L(p.desc))}</p></article>`).join("")}</div>`)}
+      ${sec(3, "secReq", kv(c.requirements, [["age","age"],["language","language"],["education","education"],["experience","experience"],["funds","funds"]]))}
+      ${sec(4, "secLive", kv(c.living, [["cost","cost"],["jobs","jobs"],["salary","salary"],["housing","housing"],["healthcare","healthcare"],["education","educationL"]]), false)}
+      ${sec(5, "secRisk", `<ul class="risk">${c.risks.map(r => `<li><b>${t("r" + r.k)}</b>${esc(L(r))}</li>`).join("")}</ul>`, false)}
+      ${sec(6, "secSuit", `<div class="tags">${c.suits.map(s => `<span class="tag">${esc(L(s))}</span>`).join("")}</div>`)}
+      ${sec(7, "secLinks", `<p class="links">${c.official.map(o => `<a href="${o.url}" target="_blank" rel="noopener">↗ ${esc(L(o.label))}</a>`).join("")}</p>`)}
+      <p class="note">${t("dNote")} ${t("updated")} ${D.updated}.</p>
+    </div>`;
+  $("#drawer").classList.add("open"); $("#scrim").classList.add("open");
+  document.body.style.overflow = "hidden";
+  setTimeout(() => $("#drawer [data-close]").focus(), 50);
+}
+function closeDetail() {
+  $("#drawer").classList.remove("open"); $("#scrim").classList.remove("open");
+  document.body.style.overflow = "";
+  lastFocus && lastFocus.focus && lastFocus.focus();
+}
+
+/* ---- compare tray + table ---- */
+function toggleCmp(id) {
+  const i = S.cmp.indexOf(id);
+  if (i >= 0) S.cmp.splice(i, 1);
+  else if (S.cmp.length >= 3) { flashTray(t("maxCompare")); return; }
+  else S.cmp.push(id);
+  localStorage.setItem("wp.cmp", JSON.stringify(S.cmp));
+  render();
+  if ($("#drawer").classList.contains("open")) openDetail(id);
+}
+function flashTray(msg) { const l = $("#tray .lbl"); if (l) { l.textContent = msg; l.style.opacity = 1; } }
+function renderTray() {
+  const tr = $("#tray");
+  tr.classList.toggle("show", S.cmp.length > 0);
+  tr.classList.toggle("hide", location.hash.indexOf("#/compare") === 0);
+  tr.innerHTML = `<span class="lbl">${t("compareN")} ${S.cmp.length}/3</span>` +
+    S.cmp.map(id => { const c = byId(id); return `<span class="pill">${c.flag} ${esc(L(c.name))}<button data-cmp="${id}" aria-label="remove ${esc(c.name.en)}">×</button></span>`; }).join("") +
+    `<button class="go" data-go ${S.cmp.length < 2 ? "disabled title='" + t("pickMore") + "'" : ""}>${t("compareGo")} →</button>`;
+}
+function renderCompare(ids) {
+  const cs = ids.map(byId).filter(c => c && c.status === "full").slice(0, 3);
+  const row = (label, f) => `<tr><th scope="row">${label}</th>${cs.map(c => `<td>${f(c)}</td>`).join("")}</tr>`;
+  const grp = k => `<tr class="grp"><th colspan="${cs.length + 1}">${UI.zh[k]} · ${UI.en[k]}</th></tr>`;
+  $("#compare").innerHTML = `<button class="btn ghost back" data-home>${t("back")}</button>
+    <h2 id="cmpTitle" style="font-family:var(--serif);font-size:32px;margin:0 0 var(--s4)">${t("cmpTitle")}</h2>
+    ${cs.length < 2 ? `<p>${t("pickMore")}</p>` : `<div class="ctab-wrap"><table class="ctab">
+    <thead><tr><th></th>${cs.map(c => `<th scope="col">${c.flag} ${esc(L(c.name))}<div class="calt">${esc(S.lang === "zh" ? c.name.en : c.name.zh)}</div></th>`).join("")}</tr></thead><tbody>
+    ${grp("secOverview")}
+    ${row(PAIR("difficulty"), c => `${ticks(c.difficulty)} ${c.difficulty}/5`)}
+    ${row(PAIR("costShort"), c => `${ticks(c.cost, "g")} ${c.cost}/5`)}
+    ${row(PAIR("langReq"), c => t(c.lang))}
+    ${row(PAIR("orientation"), c => esc(L(c.orientation)))}
+    ${grp("secPath")}
+    ${row(PAIR("fPath"), c => c.pathways.map(p => "· " + esc(L(p.name))).join("<br>"))}
+    ${grp("secReq")}
+    ${["age","language","education","experience","funds"].map(k => row(PAIR(k), c => esc(L(c.requirements[k])))).join("")}
+    ${grp("secLive")}
+    ${[["cost","cost"],["jobs","jobs"],["salary","salary"],["housing","housing"],["healthcare","healthcare"]].map(([k,l]) => row(PAIR(l), c => esc(L(c.living[k])))).join("")}
+    ${grp("secRisk")}
+    ${row(PAIR("secRisk"), c => c.risks.map(r => `<b>${t("r" + r.k)}</b> ${esc(L(r))}`).join("<br><br>"))}
+    ${row(PAIR("secSuit"), c => `<div class="tags">${c.suits.map(s => `<span class="tag">${esc(L(s))}</span>`).join("")}</div>`)}
+    </tbody></table></div>`}`;
+}
+
+/* ---- i18n of static chrome ---- */
+function applyLang() {
+  document.documentElement.lang = S.lang === "zh" ? "zh-CN" : "en";
+  document.querySelectorAll("[data-i18n]").forEach(el => el.textContent = t(el.dataset.i18n));
+  $("#q").placeholder = t("searchPh");
+  document.querySelectorAll("[data-lang]").forEach(b => b.setAttribute("aria-pressed", b.dataset.lang === S.lang));
+  $("#upd").textContent = D.updated;
+}
+
+/* ---- hash router: #/  #/country/ca  #/compare/ca,au ---- */
+function route() {
+  const h = location.hash;
+  const m = h.match(/^#\/country\/(\w+)/), mc = h.match(/^#\/compare\/([\w,]+)/);
+  $("#home").style.display = mc ? "none" : "";
+  $("#compare").classList.toggle("show", !!mc);
+  if (mc) { renderCompare(mc[1].split(",")); window.scrollTo(0, 0); }
+  if (m) openDetail(m[1]); else if ($("#drawer").classList.contains("open")) closeDetail();
+  renderTray();
+}
+function render() { applyLang(); renderFilters(); renderGrid(); renderTray(); const mc = location.hash.match(/^#\/compare\/([\w,]+)/); if (mc) renderCompare(mc[1].split(",")); }
+
+/* ---- events (delegated) ---- */
+document.addEventListener("click", e => {
+  const b = e.target.closest("button,[data-close]"); if (!b) { if (e.target.id === "scrim") location.hash = "#/"; return; }
+  if (b.dataset.lang) { S.lang = b.dataset.lang; localStorage.setItem("wp.lang", S.lang); render(); const m = location.hash.match(/^#\/country\/(\w+)/); if (m) openDetail(m[1]); }
+  else if (b.dataset.k) { S[b.dataset.k] = b.dataset.v; renderFilters(); renderGrid(); }
+  else if (b.dataset.open) location.hash = "#/country/" + b.dataset.open;
+  else if (b.dataset.cmp) toggleCmp(b.dataset.cmp);
+  else if ("close" in b.dataset) location.hash = "#/";
+  else if ("go" in b.dataset) location.hash = "#/compare/" + S.cmp.join(",");
+  else if ("home" in b.dataset) location.hash = "#/";
+  else if (b.id === "themeBtn") { S.theme = S.theme === "dark" ? "light" : "dark"; localStorage.setItem("wp.theme", S.theme); document.documentElement.dataset.theme = S.theme; }
+});
+$("#q").addEventListener("input", e => { S.q = e.target.value; renderGrid(); });
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape" && $("#drawer").classList.contains("open")) location.hash = "#/";
+  if (e.key === "/" && document.activeElement.tagName !== "INPUT") { e.preventDefault(); $("#q").focus(); }
+  // simple focus trap inside drawer
+  if (e.key === "Tab" && $("#drawer").classList.contains("open")) {
+    const f = [...$("#drawer").querySelectorAll("button,a,summary")]; if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+    else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+  }
+});
+window.addEventListener("hashchange", route);
+
+/* ---- boot ---- */
+document.documentElement.dataset.theme = S.theme;
+S.cmp = S.cmp.filter(id => byId(id) && byId(id).status === "full");
+render(); route();
+</script>
+</body>
+</html>
